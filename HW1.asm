@@ -41,7 +41,7 @@
 	numbers:.word zero,one,two,three,four,five,six,seven,eight,nine
 .text
  main:
- 	li $s0,'a'
+ 	li $s0,'a' #一些比较的边界
  	li $s1,'A'
  	li $s2,'0'
  	li $s3,26
@@ -50,26 +50,26 @@
  	li $s6,'Z'
  	li $s7,'9'
  getKey:
- 	li $v0,12 #the key ascii num
+ 	li $v0,12 #the key ascii num 获取键值
  	syscall
  Compare:
- 	li $t0,'?'
+ 	li $t0,'?'  #比较并进入相应的分支
  	beq $v0,$t0,stopprogram
- 	slt $t1,$s5,$v0 #xiao xie
+ 	slt $t1,$s5,$v0 #xiao xie小写字母的比较
  	bne $t1,$0,printstar
  	slt $t1,$v0,$s0
  	beq $t1,$0,printalpha
- 	slt $t1,$s6,$v0 #da xie
+ 	slt $t1,$s6,$v0 #da xie大写字母的比较
  	bne $t1,$0,printstar
  	slt $t1,$v0,$s1
  	beq $t1,$0,printalpha
- 	slt $t1,$s7,$v0 #numbers
+ 	slt $t1,$s7,$v0 #numbers数字的比较
  	bne $t1,$0,printstar
  	slt $t1,$v0,$s2
  	beq $t1,$0,printnum
  	j printstar
  printalpha:
- 	add $t3,$v0,$0
+ 	add $t3,$v0,$0 #打印字符相关的
  	la $a0,newline #print newline
  	li $v0,4
  	syscall
@@ -77,39 +77,39 @@
  	li $v0,11 #print the input char
  	syscall
  	slt $t1,$t3,$s0
- 	bne $t1,$0,skip
+ 	bne $t1,$0,skip #为小写字母转换偏移
  	li $t2,32
  	sub $t3,$t3,$t2
  skip:
- 	sub $t0,$t3,$s1
+ 	sub $t0,$t3,$s1 #计算偏移
  	sll $t0,$t0,2
  	la $t1,alphabet
  	add $t1,$t1,$t0
- 	lw $a0,($t1)
+ 	lw $a0,($t1) #加载字符串地址
  	li $v0,4
  	syscall
  	j getKey
  printnum:
- 	add $t3,$v0,$0
+ 	add $t3,$v0,$0 #打印数字
  	la $a0,newline #print newline
  	li $v0,4
  	syscall
  	sub $t0,$t3,$s2
  	sll $t0,$t0,2
- 	la $t1,numbers
+ 	la $t1,numbers 
  	add $t1,$t1,$t0
- 	lw $a0,($t1)
+ 	lw $a0,($t1) #加载数字地址
  	li $v0,4
  	syscall
  	j getKey
  printstar:
- 	la $a0,newline #print newline
+ 	la $a0,newline #print newline打印星号
  	li $v0,4
  	syscall
  	la $a0,star
  	li $v0,4
  	syscall
  	j getKey
- stopprogram:
+ stopprogram: #终止程序
  	li $v0,10
  	syscall
